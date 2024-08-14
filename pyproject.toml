@@ -1,0 +1,29 @@
+[project]
+name = "python-artifactory-dependency-confusion-patch"
+version = "1.1.1"
+authors = [
+    {name = "Nilton Duarte", email = "pypi@niltonduarte.com"}
+]
+description = "This application is intended to be used together with Artifactory webhook to reserve name in the python public repository when new python libraries are deployed to the internal artifactory repository"
+readme = "README.md"
+requires-python = ">=3.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests==2.32.3",
+    "build==1.2.1",
+    "twine==5.1.1"
+]
+
+[project.optional-dependencies]
+tests = [
+    "pytest==8.3.2",
+    "python-dotenv==1.0.1"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
