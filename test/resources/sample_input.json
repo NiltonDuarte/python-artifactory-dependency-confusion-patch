@@ -1,0 +1,14 @@
+{
+    "domain": "artifact",
+    "event_type": "deployed",
+    "data": {
+        "repo_key": "pypi-local",
+        "path": "lib-name/1.15.18.dev2024/lib_name-1.15.18.dev2024.tar.gz",
+        "name": "lib_name-1.15.18.dev2024.tar.gz",
+        "sha256": "1318b7b4fe17d431377ee8a3b0264c9fc0f8483c9563de7bf9aead45cea0ba44",
+        "size": 99
+    },
+    "subscription_key": "sub-key",
+    "jpd_origin": "https://host.com/artifactory",
+    "source": "jfrog/jfrt@0000"
+}
