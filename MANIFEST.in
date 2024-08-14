@@ -1,0 +1,1 @@
+include python_artifactory_dependency_confusion_patch/lib_template/README.md python_artifactory_dependency_confusion_patch/lib_template/pyproject.toml
