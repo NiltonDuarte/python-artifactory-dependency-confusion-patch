@@ -65,3 +65,5 @@ def reserve_name(request):
     return ("", 200)
 
 ```
+
+Note: `"fix deps <fix@python.deps>"` is the author email from the template
