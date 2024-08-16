@@ -1,6 +1,6 @@
 # Python Artifactory Dependency Confusion Patch
 
-This application is designed to work in conjunction with the Artifactory webhook to reserve names in the python public repository. When new python libraries are deployed to the internal artifactory repository the webhook notifies the application and the name is reserved if available.
+This application is designed to work in conjunction with the Artifactory webhook to reserve names in the python public repository. When new python libraries are deployed to the internal Artifactory repository the webhook notifies the application and the name is reserved if available.
 
 ## Python Dependency Confusion Supply Chain Attack
 
@@ -19,6 +19,8 @@ An attacker can exploit this by deploying a known library from a private reposit
 The strategy of this application is to *reserve the name on the public repository* to prevent it from being taken by a malicious actor and used as an attack vector. If the name is already taken, it can optionally send a notification to a Slack webhook.
 
 The application leverages the Artifactory [webhook](https://jfrog.com/help/r/jfrog-platform-administration-documentation/predefined-webhooks) for `deployed` events to reserve the name.
+
+Name reservation is done by publish a useless library with the same name into the python public repository with version `0.0.0`
 
 The package is meant to be used on an application that receives the Artifactory webhook `POST` request and send the JSON content to the library, as in the usage example.
 
