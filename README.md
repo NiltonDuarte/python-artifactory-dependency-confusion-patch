@@ -1,24 +1,24 @@
 # Python Artifactory Dependency Confusion Patch
 
-This application is intended to be used together with Artifactory webhook to reserve name in the python public repository. When new python libraries are deployed to the internal artifactory repository the webhook notifies the application and the name is reserved if available.
+This application is designed to work in conjunction with the Artifactory webhook to reserve names in the python public repository. When new python libraries are deployed to the internal artifactory repository the webhook notifies the application and the name is reserved if available.
 
 ## Python Dependency Confusion Supply Chain Attack
 
-Lately, supply chain attack vector are being more and more popular, it became known by a broad audience by the blog post [Dependency Confusion: How I Hacked Into Apple, Microsoft and Dozens of Other Companies](https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610) and python environment is prone to be attacked.
+Supply chain attack vectors are becoming increasingly popular. This issue gained widespread attention through the blog post [Dependency Confusion: How I Hacked Into Apple, Microsoft and Dozens of Other Companies](https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610). The Python environment is particularly vulnerable to such attacks.
 
-The python dependency manager protocol, if not configured properly, can be used to breach into the application confusing the protocol to install a package from a bad actor instead of the intended package. The most common misconfiguration is adding a private repository to the tool and letting it decide which version/package to download between the public and the private repository. By default, it will pick the package with the higher version.
+If not configured properly, the Python dependency manager protocol can be exploited to install a malicious package instead of the intended one. The most common misconfiguration involves adding a private repository to the tool and allowing it to decide which version/package to download between the public and private repositories. By default, it will choose the package with the higher version number.
 
-A way to exploit it's to deploy a know library from a private repository into the public repository with a very high version (i.e. version 999.9.9), confusing the tool to install the package with higher version.
+An attacker can exploit this by deploying a known library from a private repository into the public repository with a very high version number (e.g., version 999.9.9), thereby confusing the tool into installing the malicious package.
 
 ## Artifactory
 
-[JFROG Artifactory](https://jfrog.com/artifactory/) is a popular private artifact repository that almost other features can be used as a private repository for python libraries. Artifactory has built in [features](https://jfrog.com/blog/addressing-the-npm-manifest-confusion-vulnerability/) to help with dependency confusion attacks, but by itself it can't solve the problem if the dependency management tool is not configured properly.
+[JFROG Artifactory](https://jfrog.com/artifactory/) is a popular private artifact repository that can also serve as a private repository for Python libraries. Artifactory includes built-in [features](https://jfrog.com/blog/addressing-the-npm-manifest-confusion-vulnerability/) to help mitigate dependency confusion attacks. However, it cannot fully solve the problem if the dependency management tool is not configured correctly.
 
 ## Patching
 
-The strategy of this application is to *reserve the name on the public repository* to avoid it being taken by a bad actor and used as an attack vector. If the name is already taken it (optionally) sends a notification to a slack webhook.
+The strategy of this application is to *reserve the name on the public repository* to prevent it from being taken by a malicious actor and used as an attack vector. If the name is already taken, it can optionally send a notification to a Slack webhook.
 
-It leverages the Artifactory [webhook](https://jfrog.com/help/r/jfrog-platform-administration-documentation/predefined-webhooks) for `deployed` events to reserve the name.
+The application leverages the Artifactory [webhook](https://jfrog.com/help/r/jfrog-platform-administration-documentation/predefined-webhooks) for `deployed` events to reserve the name.
 
 The package is meant to be used on an application that receives the Artifactory webhook `POST` request and send the JSON content to the library, as in the usage example.
 
