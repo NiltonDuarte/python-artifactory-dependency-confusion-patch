@@ -1,10 +1,19 @@
 import os
-from functools import cache
+import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional, TypeAlias
 import requests
 from build.__main__ import main as build_project
 from twine import cli as upload_cli
+
+
+logger = logging.getLogger(__name__)
+
+LibName: TypeAlias = str
+AuthorEmail: TypeAlias = str
+# hold the libs found to avoid unnecessary request
+_local_cache: dict[LibName, AuthorEmail] = {}
 
 
 class SecretStr:
@@ -41,9 +50,15 @@ class PypiConfig:
         return cls(repository_url=os.environ["PYPICONFIG_ENDPOINT"], token=os.environ["PYPICONFIG_TOKEN"])
 
 
+@dataclass
+class PypiLookupResponse:
+    lib_name: str
+    found: bool
+    author_email: Optional[str] = None
+
+
 class PypiService:
-    # https://test.pypi.org/project/requests/
-    pypi_lookup_template = "{repository}/project/{lib_name}/"
+    pypi_lookup_template = "{repository}/pypi/{lib_name}/json"
 
     def __init__(self, config: PypiConfig) -> None:
         self.config = config
@@ -52,15 +67,25 @@ class PypiService:
     def from_config_env(cls):
         return PypiService(PypiConfig.load_from_env())
 
-    @cache
-    def check_lib_exist(self, lib_name) -> True:
+    def check_lib_exist(self, lib_name) -> PypiLookupResponse:
+        if lib_name in _local_cache:
+            return PypiLookupResponse(lib_name, True, _local_cache[lib_name])
+
         response = requests.get(
             self.pypi_lookup_template.format(repository=self.config.repository_url, lib_name=lib_name)
         )
-        if response.status_code == 200:
-            return True
         if response.status_code == 404:
-            return False
+            return PypiLookupResponse(lib_name, False)
+
+        if response.status_code == 200:
+            author_email = None
+            try:
+                author_email = response.json()["info"]["author_email"]
+            except KeyError:
+                logger.exception(f"Failed to parse author_email response for {lib_name}")
+            _local_cache[lib_name] = author_email
+            return PypiLookupResponse(lib_name, True, _local_cache[lib_name])
+
         # something unexpected happened
         raise PypiException(response)
 

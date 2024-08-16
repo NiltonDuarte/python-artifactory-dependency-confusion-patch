@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 def reserve_pypi_name_from_artifactory(webhook_body_json: dict):
     lib_name = ArtifactoryService.from_content(artifactory_body=webhook_body_json).lib_name()
     pypi_service = PypiService.from_config_env()
-    if pypi_service.check_lib_exist(lib_name):
-        logging.info(f"Lib [{lib_name}] already exists. Exiting")
+    if pypi_service.check_lib_exist(lib_name).found:
+        logging.debug(f"Lib [{lib_name}] already exists. Exiting")
         return
 
     lib_gen = LibGenerator.from_lib_name(lib_name)

@@ -1,3 +1,5 @@
 from python_artifactory_dependency_confusion_patch.main import reserve_pypi_name_from_artifactory
+from python_artifactory_dependency_confusion_patch.public_name_reserver import PublicNameReserver
+from python_artifactory_dependency_confusion_patch.notification_service import NotificationService, SlackNotification
 
-__all__ = ["reserve_pypi_name_from_artifactory"]
+__all__ = ["reserve_pypi_name_from_artifactory", "PublicNameReserver", "NotificationService", "SlackNotification"]
