@@ -100,11 +100,8 @@ class PypiService:
                 "__token__",
                 "--password",
                 self.config.token.get_secret(),
-                "--repository-url",
-                f"{self.config.repository_url}/legacy/",
                 "--non-interactive",
                 # "--skip-existing",
-                "--verbose",
                 "--disable-progress-bar",
             ]
         )

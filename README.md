@@ -69,3 +69,5 @@ def reserve_name(request):
 ```
 
 Note: `"fix deps <fix@python.deps>"` is the author email from the template
+
+Note: For testing set `TWINE_REPOSITORY_URL` to test repository
